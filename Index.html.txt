@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Neha 💜 | My Heart, My Apology & Our Journey</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Playfair Display, Plus Jakarta Sans, Dancing Script -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            lavender: {
+              50: '#faf7fd',
+              100: '#f4ecfc',
+              200: '#ebd9fa',
+              300: '#ddbef7',
+              400: '#c59aee',
+              500: '#ab72e3',
+              600: '#914ed3',
+              700: '#7a3cb6',
+              800: '#643493',
+              900: '#532d77',
+              950: '#351652',
+            },
+            softRose: '#f7d6e0',
+            creamyIvory: '#fffdfa',
+            goldAccent: '#d4af37'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            script: ['"Dancing Script"', 'cursive'],
+          },
+          animation: {
+            'float-gentle': 'floatGentle 4s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2.5s ease-in-out infinite',
+          },
+          keyframes: {
+            floatGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' }
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.85', transform: 'scale(1)' },
+              '50%': { opacity: '1', transform: 'scale(1.03)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Glassmorphism styling */
+    .glass-box {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(221, 190, 247, 0.6);
+    }
+    .glass-lavender {
+      background: rgba(244, 236, 252, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(197, 154, 238, 0.5);
+    }
+    .lavender-gradient-text {
+      background: linear-gradient(135deg, #643493 0%, #914ed3 45%, #b76e79 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* Wax seal circle */
+    .wax-seal-badge {
+      background: radial-gradient(circle at 35% 35%, #b94263, #7d1c34);
+      box-shadow: 0 8px 20px rgba(125, 28, 52, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    }
+    /* Card 3D Flip Styles */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-flipped {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1rem;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    /* Custom Wheel styles */
+    #wheelCanvas {
+      transition: transform 4s cubic-bezier(0.17, 0.89, 0.32, 1.05);
+    }
+    /* Toast styles */
+    .toast-anim {
+      animation: toastIn 0.35s ease-out forwards;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    /* Hide scrollbars for clean mini-game display */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-[#FAF7FD] via-[#F4ECFC] to-[#ECE1FA] text-slate-800 font-sans antialiased min-h-screen relative overflow-x-hidden selection:bg-lavender-300 selection:text-lavender-900">
+
+  <!-- Ambient Lavender Petals Background Canvas -->
+  <canvas id="ambientCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- Notification Toast Container -->
+  <aside id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-11/12 max-w-sm"></aside>
+
+  <!-- Persistent Floating Controls Bar (Music & Hug Shortcut) -->
+  <div class="fixed top-4 right-4 z-40 flex items-center gap-2">
+    <button id="musicToggleBtn" aria-label="Toggle ambient chimes" class="glass-box flex items-center gap-2 px-3.5 py-2 rounded-full shadow-md hover:shadow-lavender-300/60 hover:border-lavender-400 text-lavender-800 text-xs font-medium cursor-pointer transition-all duration-300">
+      <span class="relative flex h-2.5 w-2.5">
+        <span id="musicPulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lavender-400 opacity-75 hidden"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-lavender-600"></span>
+      </span>
+      <i id="musicIcon" class="fa-solid fa-music text-lavender-600"></i>
+      <span id="musicStateText" class="hidden sm:inline">Music: Off</span>
+    </button>
+  </div>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="sticky top-3 z-30 max-w-2xl mx-auto px-3">
+    <div class="glass-box rounded-full p-1.5 shadow-lg border border-lavender-300 flex items-center justify-between text-xs sm:text-sm font-medium text-slate-600 overflow-x-auto no-scrollbar">
+      <button onclick="switchTab('letter')" id="tab-letter" class="tab-btn px-3 sm:px-4 py-2 rounded-full transition-all duration-200 text-lavender-900 bg-lavender-200 font-semibold shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+        <i class="fa-solid fa-envelope-open-text text-lavender-700"></i>
+        <span>My Letter</span>
+      </button>
+      <button onclick="switchTab('games')" id="tab-games" class="tab-btn px-3 sm:px-4 py-2 rounded-full transition-all duration-200 hover:text-lavender-800 flex items-center gap-1.5 whitespace-nowrap">
+        <i class="fa-solid fa-gamepad text-lavender-600"></i>
+        <span>Romantic Games</span>
+      </button>
+      <button onclick="switchTab('journey')" id="tab-journey" class="tab-btn px-3 sm:px-4 py-2 rounded-full transition-all duration-200 hover:text-lavender-800 flex items-center gap-1.5 whitespace-nowrap">
+        <i class="fa-solid fa-map-location-dot text-lavender-600"></i>
+        <span>Rudrapur to Kaigo</span>
+      </button>
+      <button onclick="switchTab('buttons')" id="tab-buttons" class="tab-btn px-3 sm:px-4 py-2 rounded-full transition-all duration-200 hover:text-lavender-800 flex items-center gap-1.5 whitespace-nowrap">
+        <i class="fa-solid fa-wand-magic-sparkles text-lavender-600"></i>
+        <span>Love Actions</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-20 space-y-12">
+
+    <!-- HERO HEADER (ALWAYS VISIBLE) -->
+    <header class="text-center pt-4 relative flex flex-col items-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full glass-lavender text-lavender-800 text-xs font-semibold mb-3 tracking-wide border border-lavender-300">
+        <span>💜</span> For My Sweetest Neha • In Her Favorite Lavender
+      </div>
+
+      <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 mb-2 leading-tight">
+        I Am Truly Sorry, <span class="lavender-gradient-text">My Neha</span>
+      </h1>
+
+      <p class="font-script text-2xl sm:text-3xl text-lavender-700 mb-4 transform -rotate-1">
+        "Hostel friends, study partners, forever each other’s favorite person..."
+      </p>
+
+      <p class="max-w-xl text-slate-600 text-xs sm:text-sm leading-relaxed px-4 mb-6">
+        Being home for the past two months created misunderstandings, and I got too absorbed in routines to give you the undivided time you deserve. This place is my heart, speaking directly to yours.
+      </p>
+
+      <!-- 3-Day Kaigo Counter Banner -->
+      <section class="w-full max-w-lg glass-lavender rounded-2xl p-4 border border-lavender-300 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-lavender-700 flex items-center justify-center sm:justify-start gap-1">
+            <i class="fa-solid fa-bullseye text-lavender-600"></i> Kaigo Exam (介護) Approaching
+          </span>
+          <p class="font-serif font-bold text-slate-800 text-base sm:text-lg">Together, We Pass in 3 Days!</p>
+          <p class="text-xs text-slate-500">SSW English ✔️ | JFT ✔️ | Kaigo Next! 🌸</p>
+        </div>
+        <div class="flex items-center gap-1.5 font-sans">
+          <div class="bg-white/90 px-2.5 py-1.5 rounded-xl border border-lavender-200 text-center shadow-xs">
+            <span id="heroDays" class="block font-bold text-base sm:text-lg text-lavender-700">03</span>
+            <span class="text-[9px] uppercase text-slate-400 font-bold">Days</span>
+          </div>
+          <span class="text-lavender-400 font-bold">:</span>
+          <div class="bg-white/90 px-2.5 py-1.5 rounded-xl border border-lavender-200 text-center shadow-xs">
+            <span id="heroHours" class="block font-bold text-base sm:text-lg text-lavender-700">00</span>
+            <span class="text-[9px] uppercase text-slate-400 font-bold">Hrs</span>
+          </div>
+          <span class="text-lavender-400 font-bold">:</span>
+          <div class="bg-white/90 px-2.5 py-1.5 rounded-xl border border-lavender-200 text-center shadow-xs">
+            <span id="heroMins" class="block font-bold text-base sm:text-lg text-lavender-700">00</span>
+            <span class="text-[9px] uppercase text-slate-400 font-bold">Min</span>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: THE HEARTFELT LETTER & PROMISES -->
+    <!-- ========================================== -->
+    <div id="section-letter" class="tab-content space-y-10">
+
+      <!-- Wax Sealed Envelope Visual -->
+      <section class="flex flex-col items-center">
+        <div onclick="openLetterCard()" class="cursor-pointer group relative transform transition-all duration-300 hover:scale-105 active:scale-95">
+          <div class="w-72 sm:w-80 h-44 bg-gradient-to-br from-lavender-100 via-lavender-200 to-lavender-300 rounded-3xl shadow-xl border-2 border-lavender-300/80 flex items-center justify-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-white/30 backdrop-blur-[1px]"></div>
+            <div class="absolute -top-14 left-0 right-0 h-28 bg-lavender-300/70 rounded-b-[70px] border-b border-lavender-300"></div>
+            
+            <div class="relative z-10 text-center px-4">
+              <span class="text-[10px] tracking-widest uppercase font-bold text-lavender-800">Special Delivery</span>
+              <h2 class="font-serif text-2xl font-bold text-slate-800">To My Neha 💜</h2>
+              <p class="font-script text-lg text-lavender-700 mt-0.5">"Open when you miss us"</p>
+            </div>
+
+            <!-- Wax Seal Button -->
+            <div class="wax-seal-badge absolute -bottom-5 w-14 h-14 rounded-full flex items-center justify-center text-rose-100 font-serif font-bold text-base shadow-xl group-hover:rotate-12 transition-transform">
+              N&hearts;M
+            </div>
+          </div>
+        </div>
+        <span class="text-xs text-lavender-700 font-medium mt-7 animate-bounce">
+          <i class="fa-solid fa-arrow-down mr-1"></i> Tap to read my apology letter below
+        </span>
+      </section>
+
+      <!-- The Letter Card -->
+      <article id="mainApologyLetter" class="glass-box rounded-3xl p-6 sm:p-10 shadow-xl border border-lavender-200 relative overflow-hidden transition-all duration-500">
+        <div class="flex items-center justify-between border-b border-lavender-200 pb-4 mb-6">
+          <div>
+            <span class="text-xs font-bold text-lavender-600 uppercase tracking-widest">My Heart Laid Bare</span>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-800">A Letter of Sincere Apology</h2>
+          </div>
+          <span class="text-3xl">🌸</span>
+        </div>
+
+        <div class="space-y-4 font-serif text-slate-700 text-base sm:text-lg leading-relaxed">
+          <p class="font-sans font-bold text-lavender-900 text-xl">Dearest Neha,</p>
+
+          <p>
+            I am sitting down writing this because sometimes when we speak on the phone or text, words get muddled, emotions get tangled, and what I truly want to convey gets lost. I am writing this to ask for your forgiveness from the bottom of my heart.
+          </p>
+
+          <p class="bg-lavender-100/70 p-4 rounded-2xl border-l-4 border-lavender-500 font-sans text-sm sm:text-base text-lavender-900 italic">
+            "I am so deeply sorry for not giving you the proper time, attention, and presence that you rightfully deserve. And I am sorry for the moments I couldn't understand what you wanted, leaving you feeling alone or unheard."
+          </p>
+
+          <p>
+            Ever since we came home two months ago from our hostel in <strong>Rudrapur</strong>, the physical distance somehow blurred my priorities. I allowed study routines and daily chaos to steal away the slow, sweet moments where I should have just listened to your voice, asked about your day, and held your hand through your worries.
+          </p>
+
+          <p>
+            You are not just someone I love; you are my anchor. We weathered the hostel struggles together, celebrated cracking <strong>SSW English</strong>, conquered <strong>JFT</strong> as a team, and now in just <strong>3 days</strong>, our <strong>Kaigo exam</strong> awaits us. You are the strongest person I know, and having your smile turn quiet because of my careless habits breaks my heart.
+          </p>
+
+          <p>
+            I promise you right now: I will never make you feel like second priority again. I will learn to read between the lines, to pause and simply listen to what your heart needs without making you spell it out.
+          </p>
+
+          <div class="pt-4 font-sans font-semibold text-lavender-950">
+            Forever your biggest cheerleader and partner,<br>
+            <span class="font-script text-3xl text-lavender-700">Yours, Always and Truly.</span>
+          </div>
+        </div>
+
+        <!-- Quick letter interactions -->
+        <div class="mt-8 pt-5 border-t border-lavender-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <span class="text-slate-500 italic">Written with love • Kashipur to Neha</span>
+          <button onclick="playHarpChime()" class="text-lavender-700 hover:text-lavender-950 font-semibold flex items-center gap-1.5 underline decoration-lavender-300">
+            <i class="fa-solid fa-volume-high"></i> Play gentle chime for this letter
+          </button>
+        </div>
+      </article>
+
+      <!-- 4 Sincere Promises -->
+      <section class="space-y-4">
+        <h3 class="font-serif text-2xl font-bold text-slate-800 text-center">My Commitments To You</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="glass-box rounded-2xl p-5 border border-lavender-200 flex items-start gap-4 hover:border-lavender-400 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-lavender-200 text-lavender-800 flex items-center justify-center shrink-0 text-lg">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Protected Daily Time</h4>
+              <p class="text-xs text-slate-600 mt-1">No multitasking, no rushing. A dedicated window every single day where my focus belongs 100% to Neha.</p>
+            </div>
+          </div>
+          <div class="glass-box rounded-2xl p-5 border border-lavender-200 flex items-start gap-4 hover:border-lavender-400 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-lavender-200 text-lavender-800 flex items-center justify-center shrink-0 text-lg">
+              <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Active Heart Listening</h4>
+              <p class="text-xs text-slate-600 mt-1">Paying close attention to your tone, silence, and mood so you don't have to carry burdens alone.</p>
+            </div>
+          </div>
+          <div class="glass-box rounded-2xl p-5 border border-lavender-200 flex items-start gap-4 hover:border-lavender-400 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-lavender-200 text-lavender-800 flex items-center justify-center shrink-0 text-lg">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Kaigo Exam Shield</h4>
+              <p class="text-xs text-slate-600 mt-1">Taking all stress away for the next 3 days. We study calmly, support each other, and pass together.</p>
+            </div>
+          </div>
+          <div class="glass-box rounded-2xl p-5 border border-lavender-200 flex items-start gap-4 hover:border-lavender-400 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-lavender-200 text-lavender-800 flex items-center justify-center shrink-0 text-lg">
+              <i class="fa-solid fa-cake-candles"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Post-Exam Celebration Date</h4>
+              <p class="text-xs text-slate-600 mt-1">Your choice of dinner, your favorite treats, and celebrating passing our milestones together!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WILL YOU FORGIVE ME? INTERACTIVE SECTION -->
+      <section id="forgiveMeSection" class="glass-box rounded-3xl p-8 sm:p-10 shadow-xl border-2 border-lavender-300 text-center relative overflow-hidden">
+        <div class="max-w-md mx-auto">
+          <span class="text-4xl inline-block mb-2 animate-bounce">🥺💜</span>
+          <h3 class="font-serif text-3xl font-bold text-slate-900 mb-2">Will You Forgive Me, Neha?</h3>
+          <p class="text-xs sm:text-sm text-slate-600 mb-8 leading-relaxed">
+            I know trust and attention are nurtured by actions, not just words. Give me your sweet smile back and let me prove it to you.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative min-h-[90px]" id="forgiveBtnArea">
+            <!-- YES BUTTON -->
+            <button id="forgiveYesBtn" onclick="acceptForgiveness()" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-lavender-600 to-lavender-800 text-white font-semibold text-sm shadow-lg shadow-lavender-400/40 hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2">
+              <i class="fa-solid fa-heart text-pink-300"></i>
+              <span>Yes, I Forgive You</span>
+            </button>
+
+            <!-- PLAYFUL RUNAWAY NO BUTTON -->
+            <button id="forgiveNoBtn" onmouseenter="dodgeNoButton()" onclick="dodgeNoButton()" class="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white text-slate-600 border border-slate-300 text-xs sm:text-sm font-medium transition-transform duration-200 cursor-pointer">
+              Still thinking... 🧐
+            </button>
+          </div>
+
+          <!-- SUCCESS CERTIFICATE (HIDDEN INITIALLY) -->
+          <div id="forgiveCelebrationCard" class="hidden mt-8 p-6 rounded-3xl bg-lavender-100/90 border-2 border-dashed border-lavender-400 text-left relative">
+            <div class="flex items-center justify-between border-b border-lavender-200 pb-3 mb-4">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-lavender-700">Official Pardon</span>
+                <h4 class="font-serif text-xl font-bold text-slate-900">Certificate of Forgiveness & Eternal Love</h4>
+              </div>
+              <span class="text-2xl">📜✨</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-serif">
+              This certifies that <strong>Neha</strong> has graciously forgiven her boyfriend for being distracted and failing to understand her unspoken thoughts over the past two months. In return, she is entitled to unlimited hugs, undivided attention, full study support for Kaigo, and a guaranteed post-exam date!
+            </p>
+            <div class="mt-4 pt-3 border-t border-lavender-200 flex items-center justify-between text-[11px] text-lavender-800 font-semibold">
+              <span>Status: Forgiven & Protected 💜</span>
+              <span>Valid Forever</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: ROMANTIC GAMES -->
+    <!-- ========================================== -->
+    <div id="section-games" class="tab-content hidden space-y-12">
+
+      <header class="text-center max-w-xl mx-auto">
+        <span class="text-xs font-bold text-lavender-600 uppercase tracking-widest">Love & Smiles</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-800 mt-1">Romantic Mini-Games for Neha</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">
+          Made to make you smile, relax your mind before our Kaigo exam, and win sweet romantic coupons!
+        </p>
+      </header>
+
+      <!-- GAME 1: CATCH MY HEARTS & LAVENDER BLOOMS -->
+      <section class="glass-box rounded-3xl p-6 sm:p-8 border border-lavender-200 shadow-xl">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-lavender-200 pb-4 mb-4">
+          <div>
+            <div class="inline-block bg-lavender-100 text-lavender-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full mb-1">Mini-Game #1</div>
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-slate-800">Lavender Bloom Catcher 🌸</h3>
+            <p class="text-xs text-slate-500">Move your basket to catch falling hearts & lavender sprigs to unlock secret love vouchers!</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="glass-lavender px-3 py-1.5 rounded-xl text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-500">Score</span>
+              <span id="catcherScore" class="block font-bold text-lavender-800 text-lg">0</span>
+            </div>
+            <div class="glass-lavender px-3 py-1.5 rounded-xl text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-500">Goal</span>
+              <span class="block font-bold text-slate-700 text-lg">15</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="relative w-full h-64 sm:h-72 bg-gradient-to-b from-lavender-50 to-lavender-100 rounded-2xl overflow-hidden border border-lavender-200 touch-none shadow-inner" id="catcherGameContainer">
+          <canvas id="catcherCanvas" class="w-full h-full block"></canvas>
+          
+          <!-- Start / Resume Overlay -->
+          <div id="catcherOverlay" class="absolute inset-0 bg-white/80 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center">
+            <span class="text-3xl mb-2">🧺🌸</span>
+            <h4 class="font-serif text-xl font-bold text-slate-800 mb-1">Ready to Catch Love Tokens?</h4>
+            <p class="text-xs text-slate-600 max-w-xs mb-4">Touch & drag or move your mouse/arrow keys to slide the basket left and right!</p>
+            <button onclick="startCatcherGame()" class="px-6 py-2.5 rounded-full bg-lavender-700 hover:bg-lavender-800 text-white font-medium text-xs shadow-md transition-all cursor-pointer">
+              Start Catching 💜
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Touch Helper Buttons -->
+        <div class="flex sm:hidden items-center justify-between gap-4 mt-3">
+          <button id="btnMoveLeft" class="flex-1 py-3 rounded-xl bg-lavender-200 text-lavender-900 font-bold text-xs flex items-center justify-center gap-2 active:bg-lavender-300">
+            <i class="fa-solid fa-arrow-left"></i> Left
+          </button>
+          <button id="btnMoveRight" class="flex-1 py-3 rounded-xl bg-lavender-200 text-lavender-900 font-bold text-xs flex items-center justify-center gap-2 active:bg-lavender-300">
+            Right <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Reward Card Unlocked -->
+        <div id="catcherRewardCard" class="hidden mt-4 p-4 rounded-2xl bg-lavender-200/90 border border-lavender-400 text-slate-800 text-xs sm:text-sm">
+          <div class="flex items-center gap-2 font-bold text-lavender-900 mb-1">
+            <i class="fa-solid fa-gift text-lavender-700"></i>
+            <span>Sweet Reward Unlocked!</span>
+          </div>
+          <p id="catcherRewardText" class="font-medium text-slate-700">
+            "Coupon #1: One full evening of zero phones, back massages, and listening to anything you want to talk about!"
+          </p>
+        </div>
+      </section>
+
+      <!-- GAME 2: MEMORY CARD MATCH (OUR RUDRAPUR & MILESTONES) -->
+      <section class="glass-box rounded-3xl p-6 sm:p-8 border border-lavender-200 shadow-xl">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-lavender-200 pb-4 mb-4">
+          <div>
+            <div class="inline-block bg-lavender-100 text-lavender-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full mb-1">Mini-Game #2</div>
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-slate-800">Our Story & Memory Match 🃏</h3>
+            <p class="text-xs text-slate-500">Flip cards to match the special milestones from our hostel days to Kaigo!</p>
+          </div>
+          <button onclick="initMemoryGame()" class="px-3.5 py-1.5 rounded-xl bg-lavender-200 hover:bg-lavender-300 text-lavender-800 text-xs font-semibold cursor-pointer transition-all">
+            <i class="fa-solid fa-rotate-right mr-1"></i> Restart
+          </button>
+        </div>
+
+        <!-- Cards Grid (4x3 = 12 cards / 6 pairs) -->
+        <div id="memoryGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-3 sm:gap-4 max-w-xl mx-auto my-4">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div id="memoryWinMessage" class="hidden text-center p-5 rounded-2xl bg-lavender-100 border border-lavender-300 mt-4 animate-pulse-glow">
+          <span class="text-3xl">🎉💜</span>
+          <h4 class="font-serif font-bold text-lg text-slate-800 mt-1">You Matched All Our Memories!</h4>
+          <p class="text-xs text-slate-600 max-w-md mx-auto mt-1">
+            "Hostel in Rudrapur, SSW, JFT, and in 3 days, Kaigo. Every single card proves we are made to overcome every challenge together."
+          </p>
+        </div>
+      </section>
+
+      <!-- GAME 3: SPIN THE ROMANTIC DATE & COUPON WHEEL -->
+      <section class="glass-box rounded-3xl p-6 sm:p-8 border border-lavender-200 shadow-xl text-center">
+        <div class="inline-block bg-lavender-100 text-lavender-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full mb-1">Mini-Game #3</div>
+        <h3 class="font-serif text-2xl font-bold text-slate-800">Spin the Love Perk Wheel 🎡</h3>
+        <p class="text-xs text-slate-500 max-w-md mx-auto mb-6">
+          Spin to win lovely promises and date vouchers redeemable right after we pass our Kaigo exam!
+        </p>
+
+        <!-- Canvas Wheel Container -->
+        <div class="relative w-64 h-64 sm:w-72 sm:h-72 mx-auto flex items-center justify-center">
+          <!-- Pointer -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-lavender-800 drop-shadow-md"></div>
+          
+          <canvas id="wheelCanvas" width="300" height="300" class="w-full h-full rounded-full shadow-lg border-4 border-white"></canvas>
+          
+          <!-- Center Wheel Button -->
+          <button id="spinBtn" onclick="spinWheel()" class="absolute z-10 w-16 h-16 rounded-full bg-gradient-to-tr from-lavender-700 to-lavender-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center border-2 border-white hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+            Spin!
+          </button>
+        </div>
+
+        <div id="wheelResult" class="hidden mt-6 p-4 rounded-2xl bg-lavender-100/90 border border-lavender-300 max-w-sm mx-auto">
+          <span class="text-xs font-bold uppercase text-lavender-700">Winner perk:</span>
+          <p id="wheelPrizeText" class="font-serif text-lg font-bold text-slate-800 mt-0.5">Late Night Ice Cream Treat!</p>
+          <span class="text-[11px] text-slate-500 italic">Screenshot this to claim anytime Neha desires 💜</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: RUDRAPUR TO KAIGO (OUR JOURNEY) -->
+    <!-- ========================================== -->
+    <div id="section-journey" class="tab-content hidden space-y-10">
+
+      <header class="text-center max-w-lg mx-auto">
+        <span class="text-xs font-bold text-lavender-600 uppercase tracking-widest">Our Story & Triumphs</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-800 mt-1">From Rudrapur to Kaigo</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">
+          A reminder of where we came from, what we conquered, and why our bond is stronger than any momentary distance.
+        </p>
+      </header>
+
+      <!-- Detailed Timeline -->
+      <div class="relative border-l-2 border-lavender-300 ml-4 sm:ml-28 md:ml-36 space-y-8">
+
+        <!-- Timeline 1: Hostel Rudrapur -->
+        <div class="relative pl-6 sm:pl-8 group">
+          <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-lavender-500 border-4 border-white shadow"></div>
+          <div class="glass-box rounded-2xl p-5 border border-lavender-200 group-hover:border-lavender-400 transition-colors">
+            <span class="text-[10px] font-bold uppercase text-lavender-700">Chapter 1 • Rudrapur</span>
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-800 mt-0.5">The Hostel Days</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              Those long study sessions in the hostel, sharing food, making each other laugh when tests got overwhelming, and dreaming about moving forward in life together. You made Rudrapur feel like home.
+            </p>
+          </div>
+        </div>
+
+        <!-- Timeline 2: SSW & JFT Double Victory -->
+        <div class="relative pl-6 sm:pl-8 group">
+          <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white shadow"></div>
+          <div class="glass-box rounded-2xl p-5 border border-emerald-200 bg-emerald-50/20 group-hover:border-emerald-400 transition-colors">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase text-emerald-700">Chapter 2 • Shared Triumph</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">Both Passed! 🎓</span>
+            </div>
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-800 mt-0.5">Acing SSW English & JFT</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              We practiced listening together, quizzed each other on vocabulary, and conquered the Japanese Foundation Test and SSW English. We proved that we are an undefeated team.
+            </p>
+          </div>
+        </div>
+
+        <!-- Timeline 3: The 2 Months at Home (The Apology) -->
+        <div class="relative pl-6 sm:pl-8 group">
+          <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-rose-400 border-4 border-white shadow"></div>
+          <div class="glass-box rounded-2xl p-5 border border-rose-200 bg-rose-50/30 group-hover:border-rose-400 transition-colors">
+            <span class="text-[10px] font-bold uppercase text-rose-600">Chapter 3 • Reflection</span>
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-800 mt-0.5">The Last 2 Months At Home</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              Being physically apart created room for misunderstandings. I got caught in the hustle, forgot to give you proper time, and failed to understand what your gentle heart needed. I acknowledge this mistake completely, Neha, and I am here to make it right.
+            </p>
+          </div>
+        </div>
+
+        <!-- Timeline 4: Kaigo in 3 Days -->
+        <div class="relative pl-6 sm:pl-8 group">
+          <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-lavender-700 border-4 border-white shadow animate-pulse"></div>
+          <div class="glass-lavender rounded-2xl p-5 border border-lavender-400 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase text-lavender-800">Chapter 4 • In 3 Days</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-lavender-700 text-white rounded-full">Our Next Victory</span>
+            </div>
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-800 mt-0.5">Conquering the Kaigo Exam (介護)</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              In exactly 3 days, we are going to write another winning chapter. We’ll enter the exam with calm confidence, hand-in-hand, and we will pass it together—just like we always do!
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Uplifting Japanese Motivation Note -->
+      <section class="glass-box rounded-3xl p-6 text-center max-w-lg mx-auto border border-lavender-300">
+        <span class="text-2xl mb-1 block">🌸✨</span>
+        <h4 class="font-serif font-bold text-lg text-lavender-900">“一緒に頑張ろう、ネハ！”</h4>
+        <p class="text-xs text-slate-600 italic mt-1">"Let's do our best together, Neha! You are smart, capable, and never alone."</p>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: INTERACTIVE LOVE ACTION BUTTONS -->
+    <!-- ========================================== -->
+    <div id="section-buttons" class="tab-content hidden space-y-10">
+
+      <header class="text-center max-w-lg mx-auto">
+        <span class="text-xs font-bold text-lavender-600 uppercase tracking-widest">Instant Happiness</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-800 mt-1">Interactive Romantic Actions</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-2">
+          Whenever you feel sad, overwhelmed, or need a reminder of how cherished you are, tap any of these buttons!
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+        <!-- Button 1: Cheer Up Neha -->
+        <div class="glass-box rounded-2xl p-6 border border-lavender-200 flex flex-col justify-between hover:border-lavender-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-lavender-100 text-lavender-700 flex items-center justify-center text-xl mb-3">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-800 mb-1">Cheer Up My Neha</h3>
+            <p class="text-xs text-slate-500 mb-4">Plays an angelic harp chime and drops soothing lavender sparkle confetti.</p>
+          </div>
+          <button onclick="triggerCheerUp()" class="w-full py-3 rounded-xl bg-lavender-600 hover:bg-lavender-700 text-white font-semibold text-xs shadow-md transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+            <i class="fa-solid fa-sparkles"></i> Cheer Me Up!
+          </button>
+        </div>
+
+        <!-- Button 2: Infinite Reasons Why I Love You -->
+        <div class="glass-box rounded-2xl p-6 border border-lavender-200 flex flex-col justify-between hover:border-lavender-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center text-xl mb-3">
+              <i class="fa-solid fa-heart-circle-bolt"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-800 mb-1">Why I Love Neha (Infinite)</h3>
+            <p class="text-xs text-slate-500 mb-4">Click to generate a fresh, personalized compliment and memory note.</p>
+          </div>
+          <button onclick="generateLoveReason()" class="w-full py-3 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-semibold text-xs shadow-md transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+            <i class="fa-solid fa-comment-heart"></i> Generate Another Reason
+          </button>
+        </div>
+
+        <!-- Button 3: Virtual Hug & Kiss Burst -->
+        <div class="glass-box rounded-2xl p-6 border border-lavender-200 flex flex-col justify-between hover:border-lavender-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mb-3">
+              <i class="fa-solid fa-hands-holding-child"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-800 mb-1">Send a Virtual Warm Hug</h3>
+            <p class="text-xs text-slate-500 mb-4">Sends a warm vibration and floating heart explosion right into your screen.</p>
+          </div>
+          <button onclick="sendVirtualHug()" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold text-xs shadow-md transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+            <i class="fa-solid fa-heart"></i> Receive Long Tight Hug
+          </button>
+        </div>
+
+        <!-- Button 4: "Call Me Right Now!" Feedback -->
+        <div class="glass-box rounded-2xl p-6 border border-lavender-200 flex flex-col justify-between hover:border-lavender-400 transition-all">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl mb-3">
+              <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-800 mb-1">"I Need You Right Now"</h3>
+            <p class="text-xs text-slate-500 mb-4">Whenever you need my voice, ring me without second thought. I am always here.</p>
+          </div>
+          <button onclick="triggerCallAlert()" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs shadow-md transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+            <i class="fa-solid fa-bell"></i> Send Me a Love Ping
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Live Dynamic Reasons Display Card -->
+      <section id="reasonsDisplayCard" class="hidden glass-lavender rounded-3xl p-6 border border-lavender-300 text-center max-w-lg mx-auto animate-pulse-glow">
+        <span class="text-xs uppercase font-bold text-lavender-700 tracking-wider">Reason For My Heart</span>
+        <p id="reasonsDisplayText" class="font-serif text-lg sm:text-xl font-semibold text-slate-800 mt-2 mb-1">
+          "Because your laugh was the brightest part of those tough Rudrapur days."
+        </p>
+        <span class="text-[11px] text-slate-500">Tap the button above anytime to get more!</span>
+      </section>
+
+    </div>
+
+    <!-- PERSISTENT FOOTER -->
+    <footer class="pt-10 border-t border-lavender-200/80 text-center text-slate-500 text-xs space-y-2">
+      <div class="flex items-center justify-center gap-3 text-lavender-500">
+        <span>Rudrapur</span> &bull; <span>SSW English</span> &bull; <span>JFT</span> &bull; <span>Kaigo 介護</span>
+      </div>
+      <p class="font-serif text-sm text-slate-700">
+        Designed exclusively for <strong>Neha</strong> &bull; I promise to always love, understand, and value you.
+      </p>
+    </footer>
+
+  </main>
+
+  <!-- ========================================================
+       JAVASCRIPT LOGIC & MINI-GAMES IMPLEMENTATION
+       ======================================================== -->
+  <script>
+    /* ----------------------------------------------------
+       1. WEB AUDIO API CHIMES (NO EXTERNAL AUDIO REQUIRED)
+       ---------------------------------------------------- */
+    let audioCtx = null;
+    let isAmbientPlaying = false;
+    let ambientTimer = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq, type = 'sine', duration = 1.0, maxGain = 0.1) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(maxGain, ctx.currentTime + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {
+        console.warn("Audio unavailable:", e);
+      }
+    }
+
+    function playHarpChime() {
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playTone(freq, 'sine', 1.5, 0.08), idx * 110);
+      });
+    }
+
+    function playSoftBeep() {
+      playTone(659.25, 'triangle', 0.25, 0.05);
+    }
+
+    function playWinFanfare() {
+      const victoryNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      victoryNotes.forEach((freq, idx) => {
+        setTimeout(() => playTone(freq, 'sine', 1.8, 0.12), idx * 120);
+      });
+    }
+
+    // Toggle Ambient Background Music
+    const musicBtn = document.getElementById('musicToggleBtn');
+    const musicPulse = document.getElementById('musicPulse');
+    const musicStateText = document.getElementById('musicStateText');
+
+    musicBtn.addEventListener('click', () => {
+      isAmbientPlaying = !isAmbientPlaying;
+      if (isAmbientPlaying) {
+        musicPulse.classList.remove('hidden');
+        musicStateText.textContent = "Music: Playing 💜";
+        showToast("Playing soothing ambient chimes 🌸");
+        const scale = [440, 523.25, 587.33, 659.25, 783.99, 880];
+        ambientTimer = setInterval(() => {
+          const note = scale[Math.floor(Math.random() * scale.length)];
+          playTone(note, 'sine', 2.5, 0.035);
+        }, 1300);
+      } else {
+        musicPulse.classList.add('hidden');
+        musicStateText.textContent = "Music: Off";
+        clearInterval(ambientTimer);
+      }
+    });
+
+    /* ----------------------------------------------------
+       2. AMBIENT LAVENDER PETALS CANVAS
+       ---------------------------------------------------- */
+    const ambCanvas = document.getElementById('ambientCanvas');
+    const ambCtx = ambCanvas.getContext('2d');
+    let petals = [];
+
+    function handleResize() {
+      ambCanvas.width = window.innerWidth;
+      ambCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    class LavenderPetal {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * ambCanvas.width;
+        this.y = Math.random() * -ambCanvas.height;
+        this.size = Math.random() * 8 + 5;
+        this.speedY = Math.random() * 0.8 + 0.4;
+        this.speedX = Math.random() * 0.7 - 0.35;
+        this.angle = Math.random() * 360;
+        this.spin = Math.random() * 1.5 - 0.75;
+        this.opacity = Math.random() * 0.5 + 0.3;
+        const colors = ['rgba(197, 154, 238, ', 'rgba(221, 190, 247, ', 'rgba(171, 114, 227, '];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += Math.sin(this.y * 0.006) + this.speedX;
+        this.angle += this.spin;
+        if (this.y > ambCanvas.height + 20 || this.x < -30 || this.x > ambCanvas.width + 30) {
+          this.reset();
+          this.y = -10;
+        }
+      }
+      draw() {
+        ambCtx.save();
+        ambCtx.translate(this.x, this.y);
+        ambCtx.rotate((this.angle * Math.PI) / 180);
+        ambCtx.fillStyle = this.color + this.opacity + ')';
+        ambCtx.beginPath();
+        ambCtx.ellipse(0, 0, this.size, this.size / 2.2, Math.PI / 4, 0, Math.PI * 2);
+        ambCtx.fill();
+        ambCtx.restore();
+      }
+    }
+
+    for (let i = 0; i < 30; i++) {
+      const p = new LavenderPetal();
+      p.y = Math.random() * ambCanvas.height;
+      petals.push(p);
+    }
+
+    function renderAmbientPetals() {
+      ambCtx.clearRect(0, 0, ambCanvas.width, ambCanvas.height);
+      petals.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(renderAmbientPetals);
+    }
+    renderAmbientPetals();
+
+    /* ----------------------------------------------------
+       3. NOTIFICATION TOAST HELPER
+       ---------------------------------------------------- */
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'glass-box px-4 py-2.5 rounded-full shadow-lg border border-lavender-300 text-xs font-semibold text-lavender-950 flex items-center gap-2 toast-anim pointer-events-auto';
+      toast.innerHTML = `<span>💜</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.4s';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    /* ----------------------------------------------------
+       4. TAB SYSTEM
+       ---------------------------------------------------- */
+    function switchTab(tabId) {
+      playSoftBeep();
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-lavender-200', 'text-lavender-900', 'font-semibold', 'shadow-sm');
+        btn.classList.add('text-slate-600');
+      });
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-lavender-200', 'text-lavender-900', 'font-semibold', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-600');
+      }
+
+      const activeSection = document.getElementById(`section-${tabId}`);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+        window.scrollTo({ top: activeSection.offsetTop - 90, behavior: 'smooth' });
+      }
+
+      // Initialize games if navigated
+      if (tabId === 'games') {
+        initMemoryGame();
+        drawWheel();
+      }
+    }
+
+    /* ----------------------------------------------------
+       5. 3-DAY KAIGO COUNTDOWN
+       ---------------------------------------------------- */
+    const kaigoTarget = new Date();
+    kaigoTarget.setDate(kaigoTarget.getDate() + 3);
+    kaigoTarget.setHours(kaigoTarget.getHours() + 15);
+
+    function updateKaigoClock() {
+      const now = new Date().getTime();
+      const diff = kaigoTarget.getTime() - now;
+
+      if (diff <= 0) {
+        document.getElementById('heroDays').innerText = "00";
+        document.getElementById('heroHours').innerText = "00";
+        document.getElementById('heroMins').innerText = "00";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      document.getElementById('heroDays').innerText = String(days).padStart(2, '0');
+      document.getElementById('heroHours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('heroMins').innerText = String(mins).padStart(2, '0');
+    }
+    setInterval(updateKaigoClock, 1000);
+    updateKaigoClock();
+
+    /* ----------------------------------------------------
+       6. LETTER & FORGIVENESS INTERACTIONS
+       ---------------------------------------------------- */
+    function openLetterCard() {
+      playHarpChime();
+      const letter = document.getElementById('mainApologyLetter');
+      letter.scrollIntoView({ behavior: 'smooth' });
+      letter.classList.add('ring-4', 'ring-lavender-400');
+      setTimeout(() => letter.classList.remove('ring-4', 'ring-lavender-400'), 1500);
+
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        origin: { y: 0.35 },
+        colors: ['#c59aee', '#ddbef7', '#faf7fd']
+      });
+    }
+
+    const dodgePleaTexts = [
+      "Are you sure? 🥺",
+      "Rudrapur partners forever? 🌸",
+      "I promise no more distractions! 💜",
+      "Who will cheer you for Kaigo? 🍰",
+      "Pretty please, Neha? ✨"
+    ];
+    let dodgeCount = 0;
+
+    function dodgeNoButton() {
+      playSoftBeep();
+      dodgeCount++;
+      const noBtn = document.getElementById('forgiveNoBtn');
+      noBtn.innerText = dodgePleaTexts[dodgeCount % dodgePleaTexts.length];
+      
+      const randomX = (Math.random() - 0.5) * 220;
+      const randomY = (Math.random() - 0.5) * 110;
+      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    function acceptForgiveness() {
+      playWinFanfare();
+      confetti({
+        particleCount: 140,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#ab72e3', '#c59aee', '#f7d6e0', '#ffffff']
+      });
+
+      document.getElementById('forgiveNoBtn').style.display = 'none';
+      const yesBtn = document.getElementById('forgiveYesBtn');
+      yesBtn.innerHTML = `<i class="fa-solid fa-heart"></i> <span>Forgiven & Cherished!</span>`;
+      yesBtn.className = "w-full sm:w-auto px-8 py-3.5 rounded-full bg-emerald-600 text-white font-semibold text-sm shadow-lg";
+
+      const celebration = document.getElementById('forgiveCelebrationCard');
+      celebration.classList.remove('hidden');
+      celebration.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      showToast("Forgiveness granted! Neha's heart is golden 💜");
+    }
+
+    /* ----------------------------------------------------
+       7. MINI-GAME 1: CATCH MY HEARTS & BLOOMS
+       ---------------------------------------------------- */
+    const catcherCanvas = document.getElementById('catcherCanvas');
+    const cCtx = catcherCanvas.getContext('2d');
+    let catcherRunning = false;
+    let catcherScore = 0;
+    let basketX = 120;
+    const basketWidth = 65;
+    const basketHeight = 16;
+    let fallingItems = [];
+    let catcherAnimFrame = null;
+
+    function fitCatcherCanvas() {
+      const container = document.getElementById('catcherGameContainer');
+      catcherCanvas.width = container.clientWidth;
+      catcherCanvas.height = container.clientHeight;
+      basketX = catcherCanvas.width / 2 - basketWidth / 2;
+    }
+    window.addEventListener('resize', fitCatcherCanvas);
+
+    function startCatcherGame() {
+      fitCatcherCanvas();
+      document.getElementById('catcherOverlay').classList.add('hidden');
+      document.getElementById('catcherRewardCard').classList.add('hidden');
+      catcherScore = 0;
+      document.getElementById('catcherScore').innerText = "0";
+      fallingItems = [];
+      catcherRunning = true;
+      playSoftBeep();
+      spawnFallingItem();
+      loopCatcherGame();
+    }
+
+    function spawnFallingItem() {
+      if (!catcherRunning) return;
+      const icons = ['🌸', '💜', '✨', '🍓', '💌'];
+      fallingItems.push({
+        x: Math.random() * (catcherCanvas.width - 30) + 15,
+        y: -20,
+        speed: Math.random() * 1.5 + 1.2,
+        icon: icons[Math.floor(Math.random() * icons.length)],
+        size: 22
+      });
+      setTimeout(spawnFallingItem, Math.random() * 800 + 600);
+    }
+
+    // Touch & Mouse Movement
+    catcherCanvas.addEventListener('mousemove', (e) => {
+      const rect = catcherCanvas.getBoundingClientRect();
+      basketX = e.clientX - rect.left - basketWidth / 2;
+      basketX = Math.max(0, Math.min(catcherCanvas.width - basketWidth, basketX));
+    });
+
+    catcherCanvas.addEventListener('touchmove', (e) => {
+      const rect = catcherCanvas.getBoundingClientRect();
+      if (e.touches.length > 0) {
+        basketX = e.touches[0].clientX - rect.left - basketWidth / 2;
+        basketX = Math.max(0, Math.min(catcherCanvas.width - basketWidth, basketX));
+      }
+    }, { passive: true });
+
+    document.getElementById('btnMoveLeft').addEventListener('click', () => {
+      basketX = Math.max(0, basketX - 45);
+    });
+    document.getElementById('btnMoveRight').addEventListener('click', () => {
+      basketX = Math.min(catcherCanvas.width - basketWidth, basketX + 45);
+    });
+
+    const catcherCoupons = [
+      "🎁 Coupon #1: 1-Hour Full-Attention Call with zero phone distractions!",
+      "🎁 Coupon #2: A special dinner treat cooked or ordered exclusively for Neha!",
+      "🎁 Coupon #3: Unlimited Kaigo exam revisions & study pep-talks!",
+      "🎁 Coupon #4: 100 cuddles & heartfelt apologies whenever Neha calls!"
+    ];
+
+    function loopCatcherGame() {
+      if (!catcherRunning) return;
+      cCtx.clearRect(0, 0, catcherCanvas.width, catcherCanvas.height);
+
+      // Draw Basket
+      cCtx.fillStyle = '#914ed3';
+      cCtx.beginPath();
+      cCtx.roundRect(basketX, catcherCanvas.height - basketHeight - 8, basketWidth, basketHeight, 8);
+      cCtx.fill();
+      cCtx.font = '12px sans-serif';
+      cCtx.fillStyle = '#ffffff';
+      cCtx.fillText('🧺 Neha', basketX + 12, catcherCanvas.height - 12);
+
+      // Update and Draw Falling Items
+      for (let i = fallingItems.length - 1; i >= 0; i--) {
+        const item = fallingItems[i];
+        item.y += item.speed;
+
+        cCtx.font = `${item.size}px serif`;
+        cCtx.fillText(item.icon, item.x, item.y);
+
+        // Catch Collision
+        if (
+          item.y >= catcherCanvas.height - basketHeight - 16 &&
+          item.y <= catcherCanvas.height &&
+          item.x + item.size >= basketX &&
+          item.x <= basketX + basketWidth
+        ) {
+          playTone(880, 'sine', 0.2, 0.08);
+          fallingItems.splice(i, 1);
+          catcherScore++;
+          document.getElementById('catcherScore').innerText = catcherScore;
+
+          if (catcherScore >= 15) {
+            catcherRunning = false;
+            playWinFanfare();
+            confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
+            const rewardCard = document.getElementById('catcherRewardCard');
+            const randomCoupon = catcherCoupons[Math.floor(Math.random() * catcherCoupons.length)];
+            document.getElementById('catcherRewardText').innerText = randomCoupon;
+            rewardCard.classList.remove('hidden');
+            document.getElementById('catcherOverlay').classList.remove('hidden');
+            return;
+          }
+        } else if (item.y > catcherCanvas.height + 30) {
+          fallingItems.splice(i, 1);
+        }
+      }
+
+      catcherAnimFrame = requestAnimationFrame(loopCatcherGame);
+    }
+
+    /* ----------------------------------------------------
+       8. MINI-GAME 2: MEMORY CARD FLIP
+       ---------------------------------------------------- */
+    const memoryMilestones = [
+      { id: 1, label: 'Rudrapur', icon: '🏨', text: 'Hostel Days' },
+      { id: 2, label: 'SSW Exam', icon: '📝', text: 'Passed English!' },
+      { id: 3, label: 'JFT', icon: '🌸', text: 'Cracked Japanese' },
+      { id: 4, label: 'Kaigo', icon: '📖', text: '3 Days Away' },
+      { id: 5, label: 'Lavender', icon: '💜', text: 'Neha’s Favorite' },
+      { id: 6, label: 'Together', icon: '💑', text: 'Unstoppable Team' },
+    ];
+
+    let memoryCards = [];
+    let flippedCards = [];
+    let matchedCount = 0;
+
+    function initMemoryGame() {
+      const grid = document.getElementById('memoryGrid');
+      grid.innerHTML = '';
+      flippedCards = [];
+      matchedCount = 0;
+      document.getElementById('memoryWinMessage').classList.add('hidden');
+
+      // Duplicate cards to form pairs
+      memoryCards = [...memoryMilestones, ...memoryMilestones]
+        .map((item, index) => ({ ...item, uniqueId: index }))
+        .sort(() => Math.random() - 0.5);
+
+      memoryCards.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'perspective-1000 h-24 sm:h-28 cursor-pointer select-none';
+        cardElement.dataset.id = card.id;
+        cardElement.dataset.uniqueId = card.uniqueId;
+
+        cardElement.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front glass-box border-2 border-lavender-300 flex flex-col items-center justify-center p-2 shadow-xs hover:border-lavender-500 transition-colors">
+              <span class="text-xl sm:text-2xl text-lavender-500">💜</span>
+              <span class="text-[9px] uppercase tracking-wider font-bold text-lavender-700 mt-1">Tap me</span>
+            </div>
+            <div class="card-back bg-gradient-to-br from-lavender-100 to-lavender-200 border-2 border-lavender-500 flex flex-col items-center justify-center p-2 shadow-md">
+              <span class="text-2xl">${card.icon}</span>
+              <span class="text-[10px] font-bold text-slate-800 text-center leading-tight mt-1">${card.label}</span>
+              <span class="text-[8px] text-lavender-700 font-medium">${card.text}</span>
+            </div>
+          </div>
+        `;
+
+        cardElement.addEventListener('click', () => handleCardClick(cardElement, card));
+        grid.appendChild(cardElement);
+      });
+    }
+
+    function handleCardClick(cardElement, card) {
+      const inner = cardElement.querySelector('.card-inner');
+      if (inner.classList.contains('card-flipped') || flippedCards.length >= 2) return;
+
+      playTone(659.25, 'sine', 0.2, 0.05);
+      inner.classList.add('card-flipped');
+      flippedCards.push({ element: cardElement, card: card });
+
+      if (flippedCards.length === 2) {
+        const [c1, c2] = flippedCards;
+        if (c1.card.id === c2.card.id) {
+          playHarpChime();
+          matchedCount++;
+          flippedCards = [];
+          if (matchedCount === memoryMilestones.length) {
+            setTimeout(() => {
+              playWinFanfare();
+              confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+              document.getElementById('memoryWinMessage').classList.remove('hidden');
+            }, 500);
+          }
+        } else {
+          setTimeout(() => {
+            c1.element.querySelector('.card-inner').classList.remove('card-flipped');
+            c2.element.querySelector('.card-inner').classList.remove('card-flipped');
+            flippedCards = [];
+          }, 900);
+        }
+      }
+    }
+
+    /* ----------------------------------------------------
+       9. MINI-GAME 3: PRIZE WHEEL
+       ---------------------------------------------------- */
+    const wheelCanvas = document.getElementById('wheelCanvas');
+    const wCtx = wheelCanvas.getContext('2d');
+    const wheelSegments = [
+      "100 Hugs On Demand",
+      "Late Night Ice Cream",
+      "Chef Mode: Favorite Meal",
+      "1-Day Saying YES to Neha",
+      "Long Hand-Holding Walk",
+      "Post-Kaigo Coffee Date"
+    ];
+    const wheelColors = ['#f4ecfc', '#ebd9fa', '#ddbef7', '#c59aee', '#ab72e3', '#914ed3'];
+    let currentWheelAngle = 0;
+    let isSpinning = false;
+
+    function drawWheel() {
+      const size = wheelCanvas.width;
+      const center = size / 2;
+      const radius = center - 8;
+      const sliceAngle = (2 * Math.PI) / wheelSegments.length;
+
+      wCtx.clearRect(0, 0, size, size);
+
+      wheelSegments.forEach((text, i) => {
+        const start = i * sliceAngle;
+        const end = start + sliceAngle;
+
+        wCtx.beginPath();
+        wCtx.moveTo(center, center);
+        wCtx.arc(center, center, radius, start, end);
+        wCtx.closePath();
+        wCtx.fillStyle = wheelColors[i];
+        wCtx.fill();
+        wCtx.lineWidth = 2;
+        wCtx.strokeStyle = '#ffffff';
+        wCtx.stroke();
+
+        // Draw Text
+        wCtx.save();
+        wCtx.translate(center, center);
+        wCtx.rotate(start + sliceAngle / 2);
+        wCtx.textAlign = 'right';
+        wCtx.fillStyle = i >= 4 ? '#ffffff' : '#4a2373';
+        wCtx.font = 'bold 11px sans-serif';
+        wCtx.fillText(text, radius - 15, 4);
+        wCtx.restore();
+      });
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+      isSpinning = true;
+      playHarpChime();
+      document.getElementById('wheelResult').classList.add('hidden');
+
+      const extraRotations = 5 * 360;
+      const randomOffset = Math.floor(Math.random() * 360);
+      const targetDegree = extraRotations + randomOffset;
+
+      wheelCanvas.style.transform = `rotate(${targetDegree}deg)`;
+
+      setTimeout(() => {
+        isSpinning = false;
+        playWinFanfare();
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+
+        // Calculate winning slice (pointer is at top: 270 deg)
+        const normalizedDegree = (360 - (targetDegree % 360) + 270) % 360;
+        const sliceSize = 360 / wheelSegments.length;
+        const winningIndex = Math.floor(normalizedDegree / sliceSize) % wheelSegments.length;
+
+        document.getElementById('wheelPrizeText').innerText = wheelSegments[winningIndex];
+        document.getElementById('wheelResult').classList.remove('hidden');
+      }, 4000);
+    }
+
+    /* ----------------------------------------------------
+       10. INTERACTIVE LOVE ACTIONS & COMPLIMENTS
+       ---------------------------------------------------- */
+    const loveReasons = [
+      "Because when we were exhausted in the Rudrapur hostel, your smile alone recharged my entire world.",
+      "Because of the way you celebrate every small victory—like when we checked our SSW & JFT results!",
+      "Because your favorite color is lavender, and every time I see it, I think of pure peace and you.",
+      "Because you have the kindest heart, and even when I make mistakes, you teach me how to be better.",
+      "Because we make an invincible team—in 3 days, Kaigo will just be another test we conquered together.",
+      "Because nobody understands me the way you do, and I promise to spend my life learning your unspoken thoughts.",
+      "Because you deserve 100% of my time and focus, never leftover scraps of attention."
+    ];
+
+    function generateLoveReason() {
+      playTone(783.99, 'sine', 0.5, 0.08);
+      const card = document.getElementById('reasonsDisplayCard');
+      const text = document.getElementById('reasonsDisplayText');
+      const random = loveReasons[Math.floor(Math.random() * loveReasons.length)];
+      text.innerText = `"${random}"`;
+      card.classList.remove('hidden');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      showToast("Generated a reason straight from my heart 💜");
+    }
+
+    function triggerCheerUp() {
+      playHarpChime();
+      confetti({
+        particleCount: 60,
+        spread: 80,
+        origin: { y: 0.4 },
+        colors: ['#c59aee', '#ebd9fa', '#f7d6e0']
+      });
+      showToast("Sending Neha an extra dose of peace and strength! 🌸✨");
+    }
+
+    function sendVirtualHug() {
+      playWinFanfare();
+      // Heart-shaped confetti explosion
+      confetti({
+        particleCount: 90,
+        spread: 120,
+        origin: { y: 0.5 },
+        colors: ['#f43f5e', '#ab72e3', '#fbcfe8']
+      });
+      showToast("Wrapped you in the biggest, warmest virtual hug! 🫂💜");
+    }
+
+    function triggerCallAlert() {
+      playTone(523.25, 'sine', 0.6, 0.1);
+      setTimeout(() => playTone(659.25, 'sine', 0.6, 0.1), 200);
+      showToast("Ping sent! Call me whenever you wish—I am always ready to listen 📞💜");
+    }
+
+    // Initialize wheel on load
+    window.onload = function() {
+      drawWheel();
+      fitCatcherCanvas();
+    };
+  </script>
+</body>
+</html>
